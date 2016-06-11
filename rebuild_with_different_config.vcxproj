@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+  	<RequestedConfigurationType Condition="'$(IsSecondTime)'!='true'">DynamicLibrary</RequestedConfigurationType>
+  	<RequestedConfigurationType Condition="'$(IsSecondTime)'=='true'">StaticLibrary</RequestedConfigurationType>
+  </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -26,26 +30,26 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>$(RequestedConfigurationType)</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>$(RequestedConfigurationType)</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>$(RequestedConfigurationType)</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>$(RequestedConfigurationType)</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -174,4 +178,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+
+  <Target Name="BeforeBuild" BeforeTargets="Build">  	
+  	<Message Text="Building 1st time with the following settings:\nConfiguration=$(Configuration);Platform=$(Platform);IsSecondTime=$(IsSecondTime);ConfigurationType=$(ConfigurationType)" Condition="'$(IsSecondTime)'!='true'"/>
+  	<Message Text="Building 2nd time with the following settings:\nConfiguration=$(Configuration);Platform=$(Platform);IsSecondTime=$(IsSecondTime);ConfigurationType=$(ConfigurationType)" Condition="'$(IsSecondTime)'=='true'"/>
+  </Target>
+
+  <Target Name="AfterBuild" AfterTargets="Build" Condition="'$(IsSecondTime)'!='true'">
+  	<MSBuild Projects="$(MSBuildProjectFile)" Properties="Configuration=$(Configuration);Platform=$(Platform);IsSecondTime=true"/>
+  </Target>
 </Project>
