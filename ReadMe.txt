@@ -1,3 +1,8 @@
+This example demostrate a way to automatically build the same project multiple times, with different settings. So you don't have to duplicate or share the source code assets in different projects and keep only the single source of truth.
+
+A practical use is to build the same C++ library project into both DLL and LIB.
+
+The following comes from the origin Win32 DLL project template.
 ========================================================================
     DYNAMIC LINK LIBRARY : rebuild_with_different_config Project Overview
 ========================================================================
